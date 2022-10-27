@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gluon-setup-mode-wifi
 
-include ../gluon.mk
+include $(TOPDIR)/../package/gluon.mk
 
 define Package/gluon-setup-mode-wifi
   TITLE:=Setup mode Wifi
