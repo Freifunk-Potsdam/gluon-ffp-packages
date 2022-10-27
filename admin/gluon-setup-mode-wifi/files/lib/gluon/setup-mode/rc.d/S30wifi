@@ -1,7 +1,8 @@
 #!/bin/sh /etc/rc.common
 
-SETUP_MODE_ADDR=192.168.2.1
+SETUP_MODE_ADDR=192.168.1.1
 SETUP_MODE_NETMASK=255.255.255.0
+SETUP_MODE_SSID="GluonSetup-`sed 's/://g' /lib/gluon/core/sysconfig/primary_mac`"
 
 START=30
 STOP=90
@@ -13,6 +14,19 @@ delete_interface() {
         [ "$1" = 'loopback' ] || uci_remove network "$1"
 }
 
+delete_wifi_interface() {
+        uci_remove wireless "$1"
+}
+
+create_wifi_interface() {
+	uci_add wireless wifi-iface setupwifi
+	uci_set wireless setupwifi ifname "setupwifi"
+	uci_set wireless setupwifi device "$1"
+	uci_set wireless setupwifi network "setup"
+	uci_set wireless setupwifi mode "ap"
+	uci_set wireless setupwifi ssid "$SETUP_MODE_SSID"
+}
+
 prepare_config() {
 (
 	export UCI_CONFIG_DIR=/var/gluon/setup-mode/config
@@ -20,6 +34,7 @@ prepare_config() {
 	mkdir -p "$UCI_CONFIG_DIR"
 
 	cp /etc/config/network "$UCI_CONFIG_DIR"
+	cp /etc/config/wireless "$UCI_CONFIG_DIR"
 
 	config_load network
 	config_foreach delete_interface interface
@@ -33,6 +48,15 @@ prepare_config() {
 	uci_set network setup netmask "$SETUP_MODE_NETMASK"
 
 	uci_commit network
+
+	config_load wireless
+	config_foreach delete_wifi_interface wifi-iface
+
+	config_foreach create_wifi_interface wifi-device
+
+	echo "$SETUP_MODE_SSID" >> /tmp/test
+
+	uci_commit wireless
 )
 }
 
