@@ -1,13 +1,10 @@
-# Copyright (C) 2012 Nils Schneider <nils at nilsschneider.net>
-# This is free software, licensed under the Apache 2.0 license.
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gluon-setup-mode-wifi
 
 include ../gluon.mk
 
-define Package/gluon-setup-mode
+define Package/gluon-setup-mode-wifi
   TITLE:=Setup mode Wifi
   DEPENDS:=+gluon-setup-mode
 endef
