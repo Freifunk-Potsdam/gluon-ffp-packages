@@ -2,6 +2,7 @@
 
 SETUP_MODE_ADDR=192.168.1.1
 SETUP_MODE_NETMASK=255.255.255.0
+SETUP_MODE_WIFIDEV="setupwifi"
 SETUP_MODE_SSID="GluonSetup-`sed 's/://g' /lib/gluon/core/sysconfig/primary_mac`"
 
 START=30
@@ -19,8 +20,8 @@ delete_wifi_interface() {
 }
 
 create_wifi_interface() {
-	uci_add wireless wifi-iface setupwifi
-	uci_set wireless setupwifi ifname "setupwifi"
+	uci_add wireless wifi-iface $SETUP_MODE_WIFIDEV
+	uci_set wireless setupwifi ifname "$SETUP_MODE_WIFIDEV"
 	uci_set wireless setupwifi device "$1"
 	uci_set wireless setupwifi network "setup"
 	uci_set wireless setupwifi mode "ap"
@@ -40,7 +41,7 @@ prepare_config() {
 	config_foreach delete_interface interface
 
 	uci_add network interface setup
-	uci_set network setup ifname "$(lua -e 'print(require("gluon.sysconfig").setup_ifname)') setupwifi"
+	uci_set network setup ifname "$(lua -e 'print(require("gluon.sysconfig").setup_ifname)') $SETUP_MODE_WIFIDEV"
 	uci_set network setup macaddr "$(lua -e 'print(require("gluon.sysconfig").primary_mac)')"
 	uci_set network setup type 'bridge'
 	uci_set network setup proto 'static'
