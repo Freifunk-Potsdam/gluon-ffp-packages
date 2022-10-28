@@ -4,6 +4,7 @@ SETUP_MODE_ADDR=192.168.1.1
 SETUP_MODE_NETMASK=255.255.255.0
 SETUP_MODE_WIFIDEV="setupwifi"
 SETUP_MODE_SSID="GluonSetup-`sed 's/://g' /lib/gluon/core/sysconfig/primary_mac`"
+SETUP_MODE_KEY="putesnoulg"
 
 START=30
 STOP=90
@@ -26,6 +27,8 @@ create_wifi_interface() {
 	uci_set wireless setupwifi network "setup"
 	uci_set wireless setupwifi mode "ap"
 	uci_set wireless setupwifi ssid "$SETUP_MODE_SSID"
+	uci_set wireless setupwifi encryption "psk2"
+	uci_set wireless setupwifi key "$SETUP_MODE_KEY"
 }
 
 prepare_config() {
