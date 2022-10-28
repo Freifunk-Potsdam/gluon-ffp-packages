@@ -15,6 +15,7 @@ endef
 
 define Package/gluon-setup-mode-wifi/install
 	$(Gluon/Build/Install)
+	$(LN) "/etc/init.d/wpad" "$(1)/lib/gluon/setup-mode/rc.d/S19wpad"; \
 endef
 
 $(eval $(call BuildPackageGluon,gluon-setup-mode-wifi))
