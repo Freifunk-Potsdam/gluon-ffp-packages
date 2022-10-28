@@ -55,8 +55,6 @@ prepare_config() {
 
 	config_foreach create_wifi_interface wifi-device
 
-	echo "$SETUP_MODE_SSID" >> /tmp/test
-
 	uci_commit wireless
 )
 }
