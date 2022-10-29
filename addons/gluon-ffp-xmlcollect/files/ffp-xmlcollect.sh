@@ -69,7 +69,7 @@ plog() {
 upload_rm() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=`fupload $1 $UPLOADHOST $UPLOADPORT | tail -n1`
+		res=`fupload $1 $UPLOADHOST $UPLOADPORT`
 		if [ "$res" = "success" ]; then
 			rm $1
 		fi
@@ -79,7 +79,7 @@ upload_rm() {
 upload_rm_or_gzip() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=`fupload $1 $UPLOADHOST $UPLOADPORT | tail -n1`
+		res=`fupload $1 $UPLOADHOST $UPLOADPORT`
 		if [ "$res" = "success" ]; then
 			rm $1
 		else
