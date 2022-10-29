@@ -52,7 +52,7 @@ fupload() {
 	if [ -f "$1" ]; then
 		len=`ls -al "$1" | sed 's/ \+/\t/g' | cut -f5`
 		(
-			echo "$len $1 $hostname"
+			echo "$len `basename $1` $hostname"
 			cat "$1"
 		) | nc $2 $3
 		p=$!
