@@ -54,7 +54,7 @@ fupload() {
 		(
 			echo "$len `basename $1` $hostname"
 			cat "$1"
-		) | nc $2 $3
+		) | nc $2 $3 &
 		p=$!
 		sleep 10 && kill $p 2> /dev/null
 	fi
