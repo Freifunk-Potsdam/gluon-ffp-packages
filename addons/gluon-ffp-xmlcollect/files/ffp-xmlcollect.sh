@@ -90,7 +90,7 @@ upload_rm_or_gzip() {
 }
 
 if [ "$1" = "collect" ]; then
-	m=`date +%M`
+	m=`date +%M | sed 's/^0//'`
 	f=$COLLDIR/$time.cff
 	echo "<ffgstat host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > $f
 	(
