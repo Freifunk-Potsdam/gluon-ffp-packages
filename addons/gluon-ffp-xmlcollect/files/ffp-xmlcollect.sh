@@ -62,7 +62,7 @@ fupload() {
 
 plog() {
 	MSG="$*"
-	echo ${MSG}
+	#echo ${MSG}
 	logger -t ${SCRIPTNAME} ${MSG}
 }
 
