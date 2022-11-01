@@ -9,8 +9,6 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 include $(TOPDIR)/../package/gluon.mk
 
 define Package/gluon-ffp-xmlcollect
-  SECTION:=addons
-  CATEGORY:=Addons
   TITLE:=Freifunk Potsdam Gluon XMLcollect
   URL:=http://github.com/freifunk-potsdam/gluon-ffp-packages
   PKGARCH:=all
