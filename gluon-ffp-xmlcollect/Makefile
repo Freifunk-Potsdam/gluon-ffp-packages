@@ -18,9 +18,10 @@ define Package/gluon-ffp-xmlcollect/description
 endef
 
 define Package/gluon-ffp-xmlcollect/install
-	$(Gluon/Build/Install)
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/ffp-xmlcollect.sh $(1)/usr/bin/ffp-xmlcollect.sh
+	$(INSTALL_DIR) $(1)/lib/gluon/upgrade
+	$(INSTALL_BIN) ./files/600-ffpxmlcollect $(1)/lib/gluon/upgrade/600-ffpxmlcollect
 endef
 
 $(eval $(call BuildPackageGluon,gluon-ffp-xmlcollect))
