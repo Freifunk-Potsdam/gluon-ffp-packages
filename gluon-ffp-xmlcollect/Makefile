@@ -17,16 +17,6 @@ define Package/gluon-ffp-xmlcollect/description
   Freifunk Potsdam Gluon StatusXML collect script
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-endef
-
 define Package/gluon-ffp-xmlcollect/install
 	$(Gluon/Build/Install)
 	$(INSTALL_DIR) $(1)/usr/bin
