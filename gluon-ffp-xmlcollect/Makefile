@@ -4,8 +4,6 @@ PKG_NAME:=gluon-ffp-xmlcollect
 PKG_VERSION:=22.10
 PKG_RELEASE:=1
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
-
 include $(TOPDIR)/../package/gluon.mk
 
 define Package/gluon-ffp-xmlcollect
