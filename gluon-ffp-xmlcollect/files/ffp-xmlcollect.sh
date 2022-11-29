@@ -106,9 +106,14 @@ if [ "$1" = "collect" ]; then
 	mv $f $f.xml
 	rm -r $COLLDIR/*.cff 2> /dev/null
 elif [ "$1" = "upload" ]; then
+	i=100
 	for f in $COLLDIR/*.cff.xml.gz; do
 		upload_rm $f &
 		sleep 1
+		i=$(( i - 1 ))
+		if [ "$i" -eq 0 ]; then
+		    break
+		fi
 	done
 	for f in $COLLDIR/*.cff.xml; do
 		upload_rm_or_gzip $f &
