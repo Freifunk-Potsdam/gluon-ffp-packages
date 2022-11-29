@@ -106,12 +106,6 @@ if [ "$1" = "collect" ]; then
 	mv $f $f.xml
 	rm -r $COLLDIR/*.cff 2> /dev/null
 elif [ "$1" = "upload" ]; then
-	if [ "$2" != "--now" ]; then
-		# wait a random time
-		WAIT=$(awk 'BEGIN{srand();print int(rand()*300)}')
-		plog "sleeping $WAIT seconds before upload..."
-		sleep $WAIT
-	fi
 	for f in $COLLDIR/*.cff.xml.gz; do
 		upload_rm $f &
 		sleep 1

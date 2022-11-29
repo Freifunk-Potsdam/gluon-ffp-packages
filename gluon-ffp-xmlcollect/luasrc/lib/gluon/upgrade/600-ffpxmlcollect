@@ -1,0 +1,12 @@
+#!/usr/bin/lua
+local urandom = io.open('/dev/urandom', 'r')
+local seed1, seed2 = urandom:read(2):byte(1, 2)
+math.randomseed(seed1*0x100 + seed2)
+urandom:close()
+
+local minute = math.random(0, 9)
+
+local f = io.open('/usr/lib/micron.d/ffp-xmlcollect.cron', 'w')
+f:write(string.format('%i/10 * * * * /usr/bin/ffp-xmlcollect.sh upload\n', minute))
+f:write('* * * * * /usr/bin/ffp-xmlcollect.sh collect\n')
+f:close()
