@@ -1,7 +1,7 @@
 #!/bin/sh
 ## script variables
-SCRIPTVERSION='22.10'
-UPLOADHOST="monitor.freifunk-potsdam.de"
+SCRIPTVERSION='23.03'
+UPLOADHOST="status-in.freifunk-potsdam.de"
 UPLOADPORT=17485
 
 COLLDIR=/tmp/ffp_coll
