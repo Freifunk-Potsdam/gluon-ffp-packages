@@ -7,6 +7,6 @@ urandom:close()
 local minute = math.random(0, 9)
 
 local f = io.open('/usr/lib/micron.d/ffp-xmlcollect.cron', 'w')
-f:write(string.format('%i/10 * * * * /usr/bin/ffp-xmlcollect.sh upload\n', minute))
+f:write(string.format('%i,1%i,2%i,3%i,4%i,5%i * * * * /usr/bin/ffp-xmlcollect.sh upload\n', minute,minute,minute,minute,minute,minute ))
 f:write('* * * * * /usr/bin/ffp-xmlcollect.sh collect\n')
 f:close()
