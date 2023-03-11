@@ -22,13 +22,13 @@ delete_wifi_interface() {
 
 create_wifi_interface() {
 	uci_add wireless wifi-iface $SETUP_MODE_WIFIDEV
-	uci_set wireless setupwifi ifname "$SETUP_MODE_WIFIDEV"
-	uci_set wireless setupwifi device "$1"
-	uci_set wireless setupwifi network "setup"
-	uci_set wireless setupwifi mode "ap"
-	uci_set wireless setupwifi ssid "$SETUP_MODE_SSID"
-	uci_set wireless setupwifi encryption "psk2"
-	uci_set wireless setupwifi key "$SETUP_MODE_KEY"
+	uci_set wireless $SETUP_MODE_WIFIDEV ifname "$SETUP_MODE_WIFIDEV"
+	uci_set wireless $SETUP_MODE_WIFIDEV device "$1"
+	uci_set wireless $SETUP_MODE_WIFIDEV network "setup"
+	uci_set wireless $SETUP_MODE_WIFIDEV mode "ap"
+	uci_set wireless $SETUP_MODE_WIFIDEV ssid "$SETUP_MODE_SSID"
+	uci_set wireless $SETUP_MODE_WIFIDEV encryption "psk2"
+	uci_set wireless $SETUP_MODE_WIFIDEV key "$SETUP_MODE_KEY"
 }
 
 prepare_config() {
