@@ -1,26 +1,31 @@
 #!/usr/bin/lua
 
+local json = require 'jsonc'
 local util = require 'gluon.util'
 local uci = require('simple-uci').cursor()
+local board_data = json.load('/etc/board.json')
+local network_data = (board_data or {}).network
 
 local devs = uci:get_list('network', 'wan', 'ifname')
-local extra = uci:get('network','globals','extra_devs_wan')
-if extra then
-    for _,i in ipairs( extra ) do
-        util.add_to_set(devs, i)
+local olddevs = uci:get_list('network_gluon-old','wan','ifname')
+if olddevs then
+    for _,i in ipairs( olddevs ) do
+        if string.match(i,"eth%d+") and i ~= network_data.wan.device and i ~= network_data.lan.device then
+            util.add_to_set(devs, i)
+        end
     end
     uci:set_list('network', 'wan', 'ifname', devs)
-    uci:delete('network','globals','extra_devs_wan')
 end
 
 local devs = uci:get_list('network', 'client', 'ifname')
-local extra = uci:get('network','globals','extra_devs_client')
-if extra then
-    for _,i in ipairs( extra ) do
-        util.add_to_set(devs, i)
+local olddevs = uci:get_list('network_gluon-old','wan','ifname')
+if olddevs then
+    for _,i in ipairs( olddevs ) do
+        if string.match(i,"eth%d+") and i ~= network_data.wan.device and i ~= network_data.lan.device then
+            util.add_to_set(devs, i)
+        end
     end
     uci:set_list('network', 'client', 'ifname', devs)
-    uci:delete('network','globals','extra_devs_client')
 end
 
 uci:commit("network")
