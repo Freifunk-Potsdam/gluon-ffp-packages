@@ -7,7 +7,7 @@ local network_data = (board_data or {}).network
 
 local devs = {}
 for _,i in ipairs( uci:get("network","wan","ifname") ) do
-    if i != network_data.wan.device and i != network_data.lan.device then
+    if i ~= network_data.wan.device and i ~= network_data.lan.device then
         table.insert(devs,i)
     end
 end
@@ -15,7 +15,7 @@ uci:set("network","global","extra_devs_wan",devs)
 
 local devs = {}
 for _,i in ipairs( uci:get("network","client","ifname") ) do
-    if i != network_data.wan.device and i != network_data.lan.device then
+    if i ~= network_data.wan.device and i ~= network_data.lan.device then
         table.insert(devs,i)
     end
 end
