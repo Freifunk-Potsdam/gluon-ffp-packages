@@ -11,7 +11,7 @@ for _,i in ipairs( uci:get("network","wan","ifname") ) do
         table.insert(devs,i)
     end
 end
-uci:set("network","global","extra_devs_wan",devs)
+uci:set("network","globals","extra_devs_wan",devs)
 
 local devs = {}
 for _,i in ipairs( uci:get("network","client","ifname") ) do
@@ -19,6 +19,6 @@ for _,i in ipairs( uci:get("network","client","ifname") ) do
         table.insert(devs,i)
     end
 end
-uci:set("network","global","extra_devs_client",devs)
+uci:set("network","globals","extra_devs_client",devs)
 
 uci:commit("network")
