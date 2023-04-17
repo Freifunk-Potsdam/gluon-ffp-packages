@@ -1,0 +1,33 @@
+#!/usr/bin/lua
+
+local uci = require("simple-uci").cursor()
+local wireless = require 'gluon.wireless'
+local site = require 'gluon.site'
+
+local radio_name = "radio0"
+local bbcl_iface = "bbcl_" .. radio_name
+local bbap_iface = "bbap_" .. radio_name
+
+if uci:get('wireless', bbcl_iface, 'device') and uci:get('wireless', bbcl_iface, 'disabled') == '0' then
+        uci:set('wireless', 'mesh_radio0', 'disabled', true)
+        uci:save('wireless')
+        uci:section('network', 'interface', 'mesh_bbcl', {
+		ifname = bbcl_iface,
+		igmp_snooping = false,
+		proto = 'gluon_wired',
+		index = 4,
+		vxlan = site.mesh.vxlan(true),
+	})
+end
+
+if uci:get('wireless', bbap_iface, 'device') and uci:get('wireless', bbap_iface, 'disabled') == '0' then
+         uci:section('network', 'interface', 'mesh_bbap', {
+		ifname = bbap_iface,
+		igmp_snooping = false,
+		proto = 'gluon_wired',
+		index = 4,
+		vxlan = site.mesh.vxlan(true),
+	})
+end
+
+uci:save('network')
