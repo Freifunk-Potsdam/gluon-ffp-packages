@@ -85,6 +85,8 @@ start_service() {
 		echo '/tmp/%e.%p.%s.%t.core' > /proc/sys/kernel/core_pattern
 	}
 	procd_close_instance
+	mkdir -p /var/lib/ebtables
+	ebtables-tiny -A FORWARD --logical-in br-setup -j DROP
 	( sleep 10 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
 	( sleep 20 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
 	( sleep 30 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
