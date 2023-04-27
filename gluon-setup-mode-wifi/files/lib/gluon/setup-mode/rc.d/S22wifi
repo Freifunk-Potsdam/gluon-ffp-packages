@@ -13,11 +13,11 @@ USE_PROCD=1
 
 
 delete_interface() {
-        [ "$1" = 'loopback' ] || uci_remove network "$1"
+	[ "$1" = 'loopback' ] || uci_remove network "$1"
 }
 
 delete_wifi_interface() {
-        uci_remove wireless "$1"
+	uci_remove wireless "$1"
 }
 
 create_wifi_interface() {
@@ -70,10 +70,10 @@ init_switch() {
 }
 
 start_service() {
-        /sbin/wifi down
+	/sbin/wifi down
 	prepare_config
 	init_switch
-        /sbin/wifi up
+	/sbin/wifi up
 	iw reg set "$(lua -e 'print(require("gluon.site").regdom())')"
 
 	procd_open_instance
@@ -85,9 +85,9 @@ start_service() {
 		echo '/tmp/%e.%p.%s.%t.core' > /proc/sys/kernel/core_pattern
 	}
 	procd_close_instance
-        ( sleep 10 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
-        ( sleep 20 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
-        ( sleep 30 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
+	( sleep 10 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
+	( sleep 20 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
+	( sleep 30 && brctl addif br-setup $SETUP_MODE_WIFIDEV ) &
 }
 
 reload_service() {
