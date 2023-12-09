@@ -16,7 +16,11 @@ pcall(load_keys)
 local f = io.open(file, 'a')
 for _, key in ipairs(site.authorized_keys()) do
 	if not keys[key] and not keys['#' .. key] then
-		f:write(key .. '\n')
+		if keys['#'] then
+			f:write('#' .. key .. '\n')
+		else
+			f:write(key .. '\n')
+		end
 	end
 end
 f:close()
