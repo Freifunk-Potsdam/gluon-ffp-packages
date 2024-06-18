@@ -1,0 +1,18 @@
+#!/usr/bin/lua
+local uci = require('simple-uci').cursor()
+
+os.remove("/usr/lib/micron.d/fastd-restart")
+
+if uci:get_bool('gluon', 'mesh_vpn', 'enabled') then
+    local urandom = io.open('/dev/urandom', 'r')
+    local seed1, seed2 = urandom:read(2):byte(1, 2)
+    math.randomseed(seed1*0x100 + seed2)
+    urandom:close()
+
+    local hour = math.random(1, 5)
+    local minute = math.random(0, 59)
+
+    local f = io.open('/usr/lib/micron.d/fastd-restart', 'w')
+    f:write(string.format('%i %i * * * /etc/init.d/fastd restart\n', minute, hour))
+    f:close()
+end
