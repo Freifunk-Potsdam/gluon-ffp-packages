@@ -1,6 +1,6 @@
 #!/bin/sh
 ## script variables
-SCRIPTVERSION='23.03'
+SCRIPTVERSION='24.08'
 UPLOADHOST="status-in.freifunk-potsdam.de"
 UPLOADPORT=17485
 
@@ -14,6 +14,7 @@ if [ ! -d "$COLLDIR" ]; then
 	mkdir "$COLLDIR"
 fi
 
+nodeid=`sed 's/://g' /lib/gluon/core/sysconfig/primary_mac`
 hostname=`uci get system.@system[0].hostname`
 time=`date +%s`
 
@@ -92,7 +93,7 @@ upload_rm_or_gzip() {
 if [ "$1" = "collect" ]; then
 	m=`date +%M | sed 's/^0//'`
 	f=$COLLDIR/$time.cff
-	echo "<ffgstat host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > $f
+	echo "<ffgstat nodeid='$nodeid' host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > $f
 	(
 		xneighbours
 		xstatistics

@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gluon-ffp-xmlcollect
-PKG_VERSION:=23.03
+PKG_VERSION:=24.08
 PKG_RELEASE:=1
 
 include $(TOPDIR)/../package/gluon.mk
