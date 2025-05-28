@@ -107,6 +107,7 @@ if [ "$1" = "collect" ]; then
 	mv $f $f.xml
 	rm -r $COLLDIR/*.cff 2> /dev/null
 elif [ "$1" = "upload" ]; then
+	find $COLLDIR -type f -mmin +$(( $(cut -d'.' -f1 /proc/uptime) / 60 )) -exec rm {} \;
 	i=100
 	for f in $COLLDIR/*.cff.xml.gz; do
 		upload_rm $f &
