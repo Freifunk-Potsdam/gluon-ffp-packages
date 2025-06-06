@@ -6,7 +6,7 @@ UPLOADPORT=17485
 
 COLLDIR=/tmp/ffp_coll
 
-SCRIPTNAME=$(basename $0)
+SCRIPTNAME=$(basename "$0")
 
 export LC_ALL=C
 
@@ -53,9 +53,9 @@ fupload() {
 	if [ -f "$1" ]; then
 		len=$(ls -al "$1" | sed 's/ \+/\t/g' | cut -f5)
 		(
-			echo "$len $(basename $1) $hostname"
+			echo "$len $(basename "$1") $hostname"
 			cat "$1"
-		) | nc $2 $3 &
+		) | nc "$2" "$3" &
 		p=$!
 		sleep 10 && kill $p 2> /dev/null
 	fi
@@ -64,15 +64,15 @@ fupload() {
 plog() {
 	MSG="$*"
 	#echo ${MSG}
-	logger -t ${SCRIPTNAME} ${MSG}
+	logger -t "${SCRIPTNAME}" "${MSG}"
 }
 
 upload_rm() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=$(fupload $1 $UPLOADHOST $UPLOADPORT)
+		res=$(fupload "$1" "$UPLOADHOST" "$UPLOADPORT")
 		if [ "$res" = "success" ]; then
-			rm $1
+			rm "$1"
 		fi
 	fi
 }
@@ -80,12 +80,12 @@ upload_rm() {
 upload_rm_or_gzip() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=$(fupload $1 $UPLOADHOST $UPLOADPORT)
+		res=$(fupload "$1" "$UPLOADHOST" "$UPLOADPORT")
 		if [ "$res" = "success" ]; then
-			rm $1
+			rm "$1"
 		else
 			plog "uploading $1 failed, zipping..."
-			gzip $1 2> /dev/null
+			gzip "$1" 2> /dev/null
 		fi
 	fi
 }
@@ -93,7 +93,7 @@ upload_rm_or_gzip() {
 if [ "$1" = "collect" ]; then
 	m=$(date +%M | sed 's/^0//')
 	f=$COLLDIR/$time.cff
-	echo "<ffgstat nodeid='$nodeid' host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > $f
+	echo "<ffgstat nodeid='$nodeid' host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > "$f"
 	(
 		xneighbours
 		xstatistics
@@ -102,29 +102,29 @@ if [ "$1" = "collect" ]; then
 			xnodeinfo
 			xroutes
 		fi
-	) >> $f
-	echo "</ffgstat>" >> $f
-	mv $f $f.xml
-	rm -r $COLLDIR/*.cff 2> /dev/null
+	) >> "$f"
+	echo "</ffgstat>" >> "$f"
+	mv "$f" "$f.xml"
+	rm -r "$COLLDIR"/*.cff 2> /dev/null
 elif [ "$1" = "upload" ]; then
-	find $COLLDIR -type f -mmin +$(( $(cut -d'.' -f1 /proc/uptime) / 60 )) -exec rm {} \;
+	find "$COLLDIR" -type f -mmin +$(( $(cut -d'.' -f1 /proc/uptime) / 60 )) -exec rm {} \;
 	i=100
-	for f in $COLLDIR/*.cff.xml.gz; do
-		upload_rm $f &
+	for f in "$COLLDIR"/*.cff.xml.gz; do
+		upload_rm "$f" &
 		sleep 1
 		i=$(( i - 1 ))
 		if [ "$i" -eq 0 ]; then
 		    break
 		fi
 	done
-	for f in $COLLDIR/*.cff.xml; do
-		upload_rm_or_gzip $f &
+	for f in "$COLLDIR"/*.cff.xml; do
+		upload_rm_or_gzip "$f" &
 		sleep 1
 	done
 	wait
-	filled=$(df $COLLDIR | tail -n1 | sed -E 's/^.*([0-9]+)%.*$/\1/g')
-	while [ $filled -gt 50 ]; do
-		f=$(ls -lrc $COLLDIR | sed 's/ \+/\t/g' | cut -f9 | head -n1)
+	filled=$(df "$COLLDIR" | tail -n1 | sed -E 's/^.*([0-9]+)%.*$/\1/g')
+	while [ "$filled" -gt 50 ]; do
+		f=$(ls -lrc "$COLLDIR" | sed 's/ \+/\t/g' | cut -f9 | head -n1)
 		if [ "$f" != "" ]; then
 			rm "$COLLDIR/$f"
 		else
