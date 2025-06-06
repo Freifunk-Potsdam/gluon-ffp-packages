@@ -6,7 +6,7 @@ UPLOADPORT=17485
 
 COLLDIR=/tmp/ffp_coll
 
-SCRIPTNAME=`basename $0`
+SCRIPTNAME=$(basename $0)
 
 export LC_ALL=C
 
@@ -14,9 +14,9 @@ if [ ! -d "$COLLDIR" ]; then
 	mkdir "$COLLDIR"
 fi
 
-nodeid=`sed 's/://g' /lib/gluon/core/sysconfig/primary_mac`
-hostname=`uci get system.@system[0].hostname`
-time=`date +%s`
+nodeid=$(sed 's/://g' /lib/gluon/core/sysconfig/primary_mac)
+hostname=$(uci get system.@system[0].hostname)
+time=$(date +%s)
 
 xnodeinfo() {
 	echo "<nodeinfo>"
@@ -51,9 +51,9 @@ xroutes() {
 
 fupload() {
 	if [ -f "$1" ]; then
-		len=`ls -al "$1" | sed 's/ \+/\t/g' | cut -f5`
+		len=$(ls -al "$1" | sed 's/ \+/\t/g' | cut -f5)
 		(
-			echo "$len `basename $1` $hostname"
+			echo "$len $(basename $1) $hostname"
 			cat "$1"
 		) | nc $2 $3 &
 		p=$!
@@ -70,7 +70,7 @@ plog() {
 upload_rm() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=`fupload $1 $UPLOADHOST $UPLOADPORT`
+		res=$(fupload $1 $UPLOADHOST $UPLOADPORT)
 		if [ "$res" = "success" ]; then
 			rm $1
 		fi
@@ -80,7 +80,7 @@ upload_rm() {
 upload_rm_or_gzip() {
 	if [ -f "$1" ]; then
 		plog "uploading $1..."
-		res=`fupload $1 $UPLOADHOST $UPLOADPORT`
+		res=$(fupload $1 $UPLOADHOST $UPLOADPORT)
 		if [ "$res" = "success" ]; then
 			rm $1
 		else
@@ -91,7 +91,7 @@ upload_rm_or_gzip() {
 }
 
 if [ "$1" = "collect" ]; then
-	m=`date +%M | sed 's/^0//'`
+	m=$(date +%M | sed 's/^0//')
 	f=$COLLDIR/$time.cff
 	echo "<ffgstat nodeid='$nodeid' host='$hostname' time='$time' ver='$SCRIPTVERSION'>" > $f
 	(
@@ -122,9 +122,9 @@ elif [ "$1" = "upload" ]; then
 		sleep 1
 	done
 	wait
-	filled=`df $COLLDIR | tail -n1 | sed -E 's/^.*([0-9]+)%.*$/\1/g'`
+	filled=$(df $COLLDIR | tail -n1 | sed -E 's/^.*([0-9]+)%.*$/\1/g')
 	while [ $filled -gt 50 ]; do
-		f=`ls -lrc $COLLDIR | sed 's/ \+/\t/g' | cut -f9 | head -n1`
+		f=$(ls -lrc $COLLDIR | sed 's/ \+/\t/g' | cut -f9 | head -n1)
 		if [ "$f" != "" ]; then
 			rm "$COLLDIR/$f"
 		else
