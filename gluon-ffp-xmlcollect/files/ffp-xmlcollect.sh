@@ -124,9 +124,9 @@ elif [ "$1" = "upload" ]; then
 	wait
 	filled=$(df "$COLLDIR" | tail -n1 | sed -E 's/^.*([0-9]+)%.*$/\1/g')
 	while [ "$filled" -gt 50 ]; do
-		f=$(ls -lrc "$COLLDIR" | sed 's/ \+/\t/g' | cut -f9 | head -n1)
+		f=$(find "$COLLDIR" -type f | sort -r | head -n1)
 		if [ "$f" != "" ]; then
-			rm "$COLLDIR/$f"
+			rm "$f"
 		else
 			break
 		fi
