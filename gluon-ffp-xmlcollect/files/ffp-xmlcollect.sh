@@ -51,7 +51,7 @@ xroutes() {
 
 fupload() {
 	if [ -f "$1" ]; then
-		len=$(ls -al "$1" | sed 's/ \+/\t/g' | cut -f5)
+		len=$(du -b "$1" | cut -f1)
 		(
 			echo "$len $(basename "$1") $hostname"
 			cat "$1"
