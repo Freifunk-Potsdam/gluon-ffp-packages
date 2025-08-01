@@ -1,0 +1,19 @@
+#!/usr/bin/lua
+
+local wireless = require 'gluon.wireless'
+local uci = require('simple-uci').cursor()
+
+wireless.foreach_radio(uci, function(radio, index, config)
+	local radio_name = radio['.name']
+
+	local suffix = radio_name:match('^radio(%d+)$')
+	if not suffix then
+		return
+	end
+
+	if radio.band == '5g' then
+		uci:set('wireless', radio_name, 'htmode', 'VHT40')
+	end
+end)
+
+uci:save('wireless')
