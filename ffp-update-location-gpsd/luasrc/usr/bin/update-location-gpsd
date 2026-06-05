@@ -1,0 +1,63 @@
+#!/usr/bin/lua
+
+local util = require 'gluon.util'
+local uci = require('simple-uci').cursor()
+
+local line = util.exec("gpspipe -r -n50 -x10 | grep '^$[^,]*RMC,' | tail -n1")
+
+local nc = line:match("^([^,]+)")
+local nc_suffix = nc:sub(-3) -- Get the last 3 characters
+
+-- support all systems with RMC message
+if nc_suffix == 'RMC' and nc:sub(1, 1) == '$' then
+	local fields = {}
+	for field in line:gmatch("([^,]+)") do
+		table.insert(fields, field)
+	end
+
+	local valid = fields[3]
+
+	if valid == "A" then
+		-- First: Retrieve coordinate
+		local lat = fields[4]
+		local lon = fields[6]
+
+		-- Second: Determine if coordinate is oriented North/South or East/West
+		local latdir = fields[5]
+		local londir = fields[7]
+
+		-- Split DEGREES from coordinate
+		local latdeg = tonumber(lat:sub(1, 2))
+		local londeg = tonumber(lon:sub(1, 3))
+
+		-- Split MINUTES.SECONDS from coordinate
+		local latmin = tonumber(lat:sub(3))
+		local lonmin = tonumber(lon:sub(4))
+
+		-- Convert from Degree-Minutes to Decimal-Minutes
+		local latdec = latmin / 60
+		local londec = lonmin / 60
+
+		-- Use negative notation instead of North/South or East/West
+		if latdir == 'S' then
+			latdeg = -latdeg
+		end
+		if londir == 'W' then
+			londeg = -londeg
+		end
+		lat = string.format("%f", latdeg + latdec)
+		lon = string.format("%f", londeg + londec)
+
+		print("GPS position is valid Lat/Lon:", lat, lon)
+		-- set temp location in gluon-node-info
+		uci:set('gluon-node-info', '@location[0]', 'latitude', lat)
+		uci:set('gluon-node-info', '@location[0]', 'longitude', lon)
+		uci:save('gluon-node-info')
+		-- Link to Phip's comment: https://forum.freifunk.net/t/freifunk-location-update-via-gps/1493/2
+		-- Committing here would wear out the nvram very fast, so it should not be done.
+	else
+		print("GPS position is Invalid...", valid)
+	end
+end
+
+os.exit(0)
