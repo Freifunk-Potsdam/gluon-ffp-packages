@@ -3,6 +3,12 @@
 local util = require 'gluon.util'
 local uci = require('simple-uci').cursor()
 
+local enabled = uci:get('gpsd','core','enabled')
+if (enabled ~= 1 and enabled ~= '1')
+then
+    os.exit(0)
+end
+
 local line = util.exec("gpspipe -r -n50 -x10 | grep '^$[^,]*RMC,' | tail -n1")
 
 local nc = line:match("^([^,]+)")
