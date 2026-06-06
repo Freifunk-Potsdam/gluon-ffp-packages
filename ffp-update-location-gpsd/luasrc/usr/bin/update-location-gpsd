@@ -12,6 +12,11 @@ end
 local line = util.exec("gpspipe -r -n50 -x10 | grep '^$[^,]*RMC,' | tail -n1")
 
 local nc = line:match("^([^,]+)")
+if (nc == nil)
+then
+    print("No GPS reply.")
+    os.exit(1)
+end
 local nc_suffix = nc:sub(-3) -- Get the last 3 characters
 
 -- support all systems with RMC message
